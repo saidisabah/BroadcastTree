@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.*;
 
 public class Worker {
-    private static final int BLOCK_SIZE = 65536;
+    private static final int BLOCK_SIZE = 1024;
     private static final int D = 2; // Nombre d'enfants par Worker
     private static final int BASE_PORT = 5000; // Port du Master
 
