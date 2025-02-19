@@ -44,13 +44,13 @@ public class Worker {
 
             if (!childrenPorts.isEmpty()) {
                 serverSocket = new ServerSocket(workerPort);
-                System.out.println("[" + workerName + "] 🕓 En attente des connexions de ses enfants sur le port " + workerPort);
+                System.out.println("[" + workerName + "]  En attente des connexions de ses enfants sur le port " + workerPort);
 
                 for (int childPort : childrenPorts) {
                     Socket childSocket = serverSocket.accept();
                     childSockets.add(childSocket);
                     int childID = childPort - BASE_PORT;
-                    System.out.println("[" + workerName + "] 🔗 Connecté à Worker" + childID);
+                    System.out.println("[" + workerName + "]  Connecté à Worker" + childID);
                 }
             }
 
@@ -65,12 +65,12 @@ public class Worker {
                 byte[] dataBlock = Arrays.copyOf(buffer, bytesRead);
                 fileData.add(dataBlock);
                 fileOutputStream.write(buffer, 0, bytesRead);
-                System.out.println("[" + workerName + "] 📥 Bloc #" + blockNumber + " (" + bytesRead + " octets) reçu de Worker" + parentID);
+                System.out.println("[" + workerName + "]  Bloc #" + blockNumber + " (" + bytesRead + " octets) reçu de Worker" + parentID);
                 blockNumber++;
             }
 
             fileOutputStream.close();
-            System.out.println("[" + workerName + "] ✅ Tous les blocs reçus et enregistrés.");
+            System.out.println("[" + workerName + "]  Tous les blocs reçus et enregistrés.");
 
             // 📤 Transmettre aux enfants après réception complète
             for (Socket childSocket : childSockets) {
@@ -80,7 +80,7 @@ public class Worker {
                 for (int i = 0; i < fileData.size(); i++) {
                     outputStream.write(fileData.get(i));
                     outputStream.flush();
-                    System.out.println("[" + workerName + "] 🚀 Bloc #" + (i + 1) + " envoyé à Worker" + childID);
+                    System.out.println("[" + workerName + "]  Bloc #" + (i + 1) + " envoyé à Worker" + childID);
                 }
             }
 

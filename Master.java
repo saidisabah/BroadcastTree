@@ -20,7 +20,7 @@ public class Master {
                 System.out.println("[MASTER] Connexion établie avec Worker" + i + " (" + workerSocket.getInetAddress() + ")");
             }
 
-            System.out.println("[MASTER] 🚀 Début de l'envoi des blocs...");
+            System.out.println("[MASTER]  Début de l'envoi des blocs...");
 
             // Lecture du fichier et envoi en blocs
             File file = new File(FILE_PATH);
@@ -34,12 +34,12 @@ public class Master {
                     OutputStream outputStream = workerSockets.get(i).getOutputStream();
                     outputStream.write(buffer, 0, bytesRead);
                     outputStream.flush();
-                    System.out.println("[MASTER] 📦 Bloc #" + blockNumber + " (" + bytesRead + " octets) envoyé à Worker" + (i + 1));
+                    System.out.println("[MASTER]  Bloc #" + blockNumber + " (" + bytesRead + " octets) envoyé à Worker" + (i + 1));
                 }
                 blockNumber++;
             }
 
-            System.out.println("[MASTER] ✅ Envoi terminé.");
+            System.out.println("[MASTER]  Envoi terminé.");
             fileInputStream.close();
             for (Socket socket : workerSockets) socket.close();
         } catch (IOException e) {
@@ -47,4 +47,5 @@ public class Master {
         }
     }
 }
+    
 
