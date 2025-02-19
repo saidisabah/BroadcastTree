@@ -11,14 +11,16 @@ public class Master {
     public static void main(String[] args) {
         List<Socket> workerSockets = new ArrayList<>();
         try (ServerSocket serverSocket = new ServerSocket(MASTER_PORT)) {
-            System.out.println("Master en attente de connexions...");
+            System.out.println("[MASTER] En attente de connexions...");
 
             // Attente des connexions des D premiers Workers
             for (int i = 1; i <= D; i++) {
                 Socket workerSocket = serverSocket.accept();
                 workerSockets.add(workerSocket);
-                System.out.println("Connexion avec " + workerSocket.getInetAddress());
+                System.out.println("[MASTER] Connexion établie avec Worker" + i + " (" + workerSocket.getInetAddress() + ")");
             }
+
+            System.out.println("[MASTER] 🚀 Début de l'envoi des blocs...");
 
             // Lecture du fichier et envoi en blocs
             File file = new File(FILE_PATH);
@@ -28,16 +30,16 @@ public class Master {
             int blockNumber = 1;
 
             while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-                System.out.println("Master envoie le bloc #" + blockNumber + " (" + bytesRead + " octets)");
-                for (Socket socket : workerSockets) {
-                    OutputStream outputStream = socket.getOutputStream();
+                for (int i = 0; i < workerSockets.size(); i++) {
+                    OutputStream outputStream = workerSockets.get(i).getOutputStream();
                     outputStream.write(buffer, 0, bytesRead);
                     outputStream.flush();
+                    System.out.println("[MASTER] 📦 Bloc #" + blockNumber + " (" + bytesRead + " octets) envoyé à Worker" + (i + 1));
                 }
                 blockNumber++;
             }
 
-            System.out.println("Master a terminé l'envoi.");
+            System.out.println("[MASTER] ✅ Envoi terminé.");
             fileInputStream.close();
             for (Socket socket : workerSockets) socket.close();
         } catch (IOException e) {
